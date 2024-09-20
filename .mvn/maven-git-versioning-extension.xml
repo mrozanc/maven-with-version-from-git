@@ -2,7 +2,16 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="https://github.com/qoomon/maven-git-versioning-extension https://qoomon.github.io/maven-git-versioning-extension/configuration-9.4.0.xsd">
 
-    <refs>
+    <describeTagPattern>v.+</describeTagPattern>
+
+    <refs considerTagsOnBranches="true">
+
+        <ref type="branch">
+            <pattern>main</pattern>
+            <describeTagFirstParent>false</describeTagFirstParent>
+            <version>${describe.tag.version.major.next}.${describe.tag.version.minor.next}.0${describe.distance.snapshot}</version>
+        </ref>
+
         <ref type="branch">
             <pattern>.+</pattern>
             <version>${ref}-SNAPSHOT</version>
