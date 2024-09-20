@@ -18,15 +18,13 @@
 
         <ref type="branch">
             <pattern><![CDATA[release/(?<major>\d+)\.(?<minor>\d+)]]></pattern>
-            <version>${ref.major}.${ref.minor}.0-rc.${describe.distance}</version>
+            <version>${ref.major}.${ref.minor}.0-rc.${describe.distance}${describe.distance.snapshot}</version>
         </ref>
 
         <ref type="branch">
-            <pattern>.+</pattern>
-            <version>${ref}-SNAPSHOT</version>
-            <properties>
-                <foo>${ref}</foo>
-            </properties>
+            <pattern><![CDATA[(?:feature/)?(?<title>.+)]]></pattern>
+            <describeTagFirstParent>false</describeTagFirstParent>
+            <version>${describe.tag.version.major}.${describe.tag.version.minor.next}.0-${ref.title.slug}-SNAPSHOT</version>
         </ref>
     </refs>
 
