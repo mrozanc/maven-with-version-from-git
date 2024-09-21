@@ -1,0 +1,46 @@
+name: Start a new release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: Release increment, based on develop version
+        required: true
+        type: choice
+        default: minor
+        options:
+          - major
+          - minor
+
+jobs:
+  start_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Set new version
+        id: set_new_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INCREMENT: ${{ inputs.release_type }}
+        run: |
+          base_version="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+          echo "base_version=$base_version" >> $GITHUB_OUTPUT
+          major="$(echo "$base_version" | cut -d'.' -f 1 )"
+          minor="$(echo "$base_version" | cut -d'.' -f 2 )"
+          $(($"$INCREMENT"++))
+          new_version="$major.$minor.0-rc.1"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          git checkout -b "release/$major.$minor"
+          git tag -m "Start of new release $major.$minor" "v$new_version"
+          git push "v$new_version"
+          git push origin "release/$major.$minor"
