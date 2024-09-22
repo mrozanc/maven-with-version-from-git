@@ -1,8 +1,9 @@
 <configuration xmlns="https://github.com/qoomon/maven-git-versioning-extension"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="https://github.com/qoomon/maven-git-versioning-extension https://qoomon.github.io/maven-git-versioning-extension/configuration-9.4.0.xsd">
+               xsi:schemaLocation="https://github.com/qoomon/maven-git-versioning-extension https://qoomon.github.io/maven-git-versioning-extension/configuration-9.8.2.xsd">
 
     <describeTagPattern><![CDATA[v\d+\.\d+\.\d+(?:-(?<preRelease>(?<preReleaseType>alpha|beta|rc)\.(?<preReleaseIncrement>\d+)))?]]></describeTagPattern>
+    <describeTagMaxDepth>2</describeTagMaxDepth>
 
     <refs considerTagsOnBranches="true">
         <ref type="tag">
@@ -29,13 +30,20 @@
         </ref>
 
         <ref type="branch">
-            <pattern><![CDATA[hotfix/(?<hotfix>.+)]]></pattern>
-            <version>${describe.tag.version.major}.${describe.tag.version.minor}.${describe.tag.version.patch.next}-${ref.hotfix.slug}-SNAPSHOT</version>
+            <pattern><![CDATA[hotfix/(?<title>.+)]]></pattern>
+            <describeTagPattern><![CDATA[v\d+\.\d+\.\d+]]></describeTagPattern>
+            <version>${describe.tag.version.major}.${describe.tag.version.minor}.${describe.tag.version.patch.next}-${ref.title:word}-SNAPSHOT</version>
         </ref>
 
         <ref type="branch">
-            <pattern><![CDATA[(?:(?:feature|rcfix)/)?/(?<feature>.+)]]></pattern>
-            <version>${describe.tag.version.major}.${describe.tag.version.minor.next}.0-${ref.feature.slug}-SNAPSHOT</version>
+            <pattern><![CDATA[rcfix/(?<title>.+)]]></pattern>
+            <describeTagPattern><![CDATA[v(?<major>\d+)\.(?<minor>\d+)\.0-rc\.(?<rcIncrement>\d+)]]></describeTagPattern>
+            <version>${describe.tag.version.major}.${describe.tag.version.minor}.0-rc.${describe.tag.rcIncrement:-0:next}-${ref.title:word}-SNAPSHOT</version>
+        </ref>
+
+        <ref type="branch">
+            <pattern><![CDATA[(?:feature/)?/(?<feature>.+)]]></pattern>
+            <version>${describe.tag.version.major}.${describe.tag.version.minor.next}.0-${ref.feature:word}-SNAPSHOT</version>
         </ref>
 
     </refs>
