@@ -6,7 +6,7 @@
 
     <refs considerTagsOnBranches="true">
         <ref type="tag">
-            <pattern><![CDATA[v(?<version>\d+\.\d+\.\d+(?:-(?<preRelease>(?<preReleaseType>alpha|beta|rc)\.(?<preReleaseIncrement>\d+)))?]]></pattern>
+            <pattern><![CDATA[v(?<version>\d+\.\d+\.\d+(?:-(?<preRelease>(?<preReleaseType>alpha|beta|rc)\.(?<preReleaseIncrement>\d+)))?)]]></pattern>
             <version>${ref.version}</version>
         </ref>
 
