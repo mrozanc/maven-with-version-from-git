@@ -2,11 +2,11 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="https://github.com/qoomon/maven-git-versioning-extension https://qoomon.github.io/maven-git-versioning-extension/configuration-9.4.0.xsd">
 
-    <describeTagPattern><![CDATA[v\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?]]></describeTagPattern>
+    <describeTagPattern><![CDATA[v\d+\.\d+\.\d+(?:-(?<preRelease>(?<preReleaseType>alpha|beta|rc)\.(?<preReleaseIncrement>\d+)))?]]></describeTagPattern>
 
     <refs considerTagsOnBranches="true">
         <ref type="tag">
-            <pattern><![CDATA[v(?<version>\d+\.\d+\.\d+(?<preRelease>-(?:alpha|beta|rc)\.\d+)?)]]></pattern>
+            <pattern><![CDATA[v(?<version>\d+\.\d+\.\d+(?:-(?<preRelease>(?<preReleaseType>alpha|beta|rc)\.(?<preReleaseIncrement>\d+)))?]]></pattern>
             <version>${ref.version}</version>
         </ref>
 
@@ -24,13 +24,8 @@
 
         <ref type="branch">
             <pattern><![CDATA[release/(?<major>\d+)\.(?<minor>\d+)(?:\.x)?]]></pattern>
-            <describeTagPattern><![CDATA[rc-\d+\.\d+-marker]]></describeTagPattern>
-            <version>${ref.major}.${ref.minor}.0-rc.${describe.distance}-SNAPSHOT</version>
-        </ref>
-
-        <ref type="branch">
-            <pattern><![CDATA[PR-(?<pr_id>\d+)]]></pattern>
-            <version>${describe.tag.version.major}.${describe.tag.version.minor.next}.0-pr_${ref.pr_id.slug}-SNAPSHOT</version>
+            <describeTagPattern><![CDATA[\Qv{{ref.major}}.{{ref.minor}}.0-rc.\E(?<rcIncrement>\d+)]]></describeTagPattern>
+            <version>${ref.major}.${ref.minor}.0-rc.${describe.tag.rcIncrement:-0:next}-SNAPSHOT</version>
         </ref>
 
         <ref type="branch">
