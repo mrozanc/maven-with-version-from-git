@@ -3,7 +3,7 @@
                xsi:schemaLocation="https://github.com/qoomon/maven-git-versioning-extension https://qoomon.github.io/maven-git-versioning-extension/configuration-9.8.2.xsd">
 
     <describeTagPattern><![CDATA[v\d+\.\d+\.\d+(?:-(?<preRelease>(?<preReleaseType>alpha|beta|rc)\.(?<preReleaseIncrement>\d+)))?]]></describeTagPattern>
-    <describeTagMaxDepth>2</describeTagMaxDepth>
+    <describeTagMaxDepth>100</describeTagMaxDepth>
 
     <refs considerTagsOnBranches="true">
         <ref type="tag">
@@ -26,6 +26,7 @@
         <ref type="branch">
             <pattern><![CDATA[release/(?<major>\d+)\.(?<minor>\d+)(?:\.x)?]]></pattern>
             <describeTagPattern><![CDATA[\Qv{{ref.major}}.{{ref.minor}}.0-rc.\E(?<rcIncrement>\d+)]]></describeTagPattern>
+            <describeTagMaxDepth>30</describeTagMaxDepth>
             <version>${ref.major}.${ref.minor}.0-rc.${describe.tag.rcIncrement:-0:next}-SNAPSHOT</version>
         </ref>
 
@@ -50,7 +51,7 @@
 
     <!-- optional fallback configuration in case of no matching ref configuration-->
     <rev>
-        <version>${commit}</version>
+        <version>${version.core}-${commit}-SNAPSHOT</version>
     </rev>
 
 </configuration>
