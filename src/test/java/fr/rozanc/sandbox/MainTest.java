@@ -19,5 +19,7 @@ class MainTest {
 
             assertThat(outputStream.toString()).startsWith("Hello and welcome!" + System.lineSeparator());
         }
+
+        System.out.println(System.getProperty("java.runtime.version"));
     }
 }
